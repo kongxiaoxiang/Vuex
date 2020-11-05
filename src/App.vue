@@ -1,47 +1,63 @@
 <template>
-  <div>
-    click {{count}} times,count is {{evenorodd}} <br>
-    <button @click="increment">increment</button>
-    <button @click="decrement">decrement</button>
-    <button @click="incrementIfOdd">increment if odd</button>
-    <button @click="incrementAsync">incrementAsync</button>
+  <div class="todo-container">
+    <div class="todo-wrap">
+      <Header :ADDTODO='ADDTODO'/>
+      <List :todos='todos' :delteItem='delteItem'/>
+      <Footer :todos='todos' :deleteCompTask='deleteCompTask' :check='check'/>
+    </div>
   </div>
 </template>
 
 <script>
-  import {mapState,mapGetters,mapActions} from 'vuex'
+  import Header from './components/Header'
+  import List from './components/List'
+  import Footer from './components/Footer'
+  import utilstorage from './util/utilstorage'
   export default {
-    computed:{
-      ...mapState(['count']), 
-      ...mapGetters(['evenorodd'])  //mapGetters()返回值 {evenorodd(){return this.$store.getters['evenorodd']}}
+    data(){
+      return {
+        todos:utilstorage.READ_TODOS()
+      }
+    },
+    components:{
+      Header,
+      List,
+      Footer
     },
     methods:{
-      ...mapActions(['increment','decrement','incrementIfOdd','incrementAsync'])
+      ADDTODO(todo){
+        this.todos.unshift(todo)
+      },
+      delteItem(index){
+        this.todos.splice(index,1)
+      },
+      //清除已经完成的任务
+      deleteCompTask(){
+        this.todos = this.todos.filter (todo => !todo.complete)
+      },
+      //全选/全不选
+      check(isCheck){
+        this.todos.forEach(todo => todo.complete = isCheck)
+      }
+    },
+    watch:{
+      todos:{
+        deep:true,
+        handler:utilstorage.SAVE_TODOS
+      }
     }
   }
-  // export default {
-  //   computed:{
-  //     evenorodd(){
-  //       return this.$store.getters.evenorodd
-  //     }
-  //   },
-  //   methods:{
-  //     increment(){ //通知vuex去增加   
-  //       this.$store.dispatch('increment')  //触发store中对应的actions调用
-  //     },
-  //     decrement(){
-  //       this.$store.dispatch('decrement')
-  //     },
-  //     incrementIfOdd(){
-  //       this.$store.dispatch('incrementIfOdd')
-  //     },
-  //     incrementAsync(){
-  //       this.$store.dispatch('incrementAsync')
-  //     }
-  //   }
-  // }
 </script>
 
 <style>
-
+/*app*/
+.todo-container {
+  width: 600px;
+  margin: 0 auto;
+}
+.todo-container .todo-wrap {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
 </style>
