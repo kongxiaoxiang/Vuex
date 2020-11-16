@@ -1,19 +1,28 @@
 <template>
   <ul class="todo-main">
-    <Item v-for="(todo,index) in todos" :key='index' :todo='todo' :index='index'
-      :delteItem='delteItem'
+    <Item v-for="(todo,index) in todos" :key='index' 
+      :todo='todo' :index='index'
     />
   </ul>
 </template>
 
 <script>
   import Item from './Item'
+  import {mapState} from 'vuex'
+  import utilstorage from '../util/utilstorage'
   export default {
-    props:{
-      todos:Array,
-      delteItem:Function
+    computed:{
+      ...mapState(['todos'])
     },
-    components:{Item},
+    watch:{
+      todos:{
+        deep:true,
+        handler:utilstorage.SAVE_TODOS
+      }
+    },
+    components:{
+      Item
+    },
   };
 </script>
 

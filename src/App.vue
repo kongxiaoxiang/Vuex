@@ -1,9 +1,9 @@
 <template>
   <div class="todo-container">
     <div class="todo-wrap">
-      <Header :ADDTODO='ADDTODO'/>
-      <List :todos='todos' :delteItem='delteItem'/>
-      <Footer :todos='todos' :deleteCompTask='deleteCompTask' :check='check'/>
+      <Header/>
+      <List/>
+      <Footer/>
     </div>
   </div>
 </template>
@@ -14,38 +14,20 @@
   import Footer from './components/Footer'
   import utilstorage from './util/utilstorage'
   export default {
-    data(){
-      return {
-        todos:utilstorage.READ_TODOS()
-      }
+    mounted(){
+      this.$store.dispatch('reqTodos')
     },
     components:{
       Header,
       List,
       Footer
     },
-    methods:{
-      ADDTODO(todo){
-        this.todos.unshift(todo)
-      },
-      delteItem(index){
-        this.todos.splice(index,1)
-      },
-      //清除已经完成的任务
-      deleteCompTask(){
-        this.todos = this.todos.filter (todo => !todo.complete)
-      },
-      //全选/全不选
-      check(isCheck){
-        this.todos.forEach(todo => todo.complete = isCheck)
-      }
-    },
-    watch:{
-      todos:{
-        deep:true,
-        handler:utilstorage.SAVE_TODOS
-      }
-    }
+    // watch:{
+    //   todos:{
+    //     deep:true,
+    //     handler:utilstorage.SAVE_TODOS
+    //   }
+    // }
   }
 </script>
 

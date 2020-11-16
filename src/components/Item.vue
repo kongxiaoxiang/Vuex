@@ -19,7 +19,6 @@
     props:{
       todo:Object,
       index:Number,
-      delteItem:Function
     },
     methods:{
       handler(isEnter){
@@ -33,7 +32,7 @@
       },
       del(){
         if(window.confirm(`你确定删除${this.todo.title}的评论吗`)){
-          this.delteItem(this.index)
+          this.$store.dispatch('deleteTodo',this.index)
         }
       }
     }

@@ -12,9 +12,6 @@
         title:''
       }
     },
-    props:{
-      ADDTODO:Function
-    },
     methods:{
       addTodo(){
         if(!this.title.trim()){
@@ -25,7 +22,7 @@
           title:this.title,
           complete:false
         }
-        this.ADDTODO(todo)
+        this.$store.dispatch('addTodo',todo)
         this.title = ''
       }
 

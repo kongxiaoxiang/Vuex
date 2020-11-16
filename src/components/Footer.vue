@@ -3,7 +3,7 @@
     <label>
       <input type="checkbox" v-model='isCheckAll'/>
     </label>
-    <span> <span>已完成{{completeCount}}</span> / 全部{{todos.length}} </span>
+    <span> <span>已完成{{completeCount}}</span> / 全部{{totalCount}} </span>
     <button class="btn btn-danger" v-show="completeCount>0"
       @click="deleteCompTask"
       >清除已完成任务</button>
@@ -11,24 +11,21 @@
 </template>
 
 <script>
+  import {mapGetters,mapActions} from 'vuex'
   export default {
-    props:{
-      todos:Array,
-      deleteCompTask:Function,
-      check:Function
-    },
     computed:{
-      completeCount(){
-        return this.todos.reduce((pre,todo) => pre + (todo.complete?1:0),0)
-      },
+      ...mapGetters(['totalCount','completeCount']),
       isCheckAll: {
         get(){
-          return this.todos.length === this.completeCount && this.todos.length>0
+          return this.$store.getters.isCheckAll
         },
         set(value){
-          this.check(value)
+          this.$store.dispatch('isCheck',value)
         }
       }
+    },
+    methods:{
+      ...mapActions(['deleteCompTask'])
     }
   };
 </script>
